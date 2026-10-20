@@ -1,0 +1,663 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "d8cd27e7",
+   "metadata": {},
+   "source": [
+    "Дз к семинару 4 Питон Воронов Марк Б26-534"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "16aa9c1d",
+   "metadata": {},
+   "source": [
+    "Первая задача"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f9b12c35",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "lines_count = 0\n",
+    "biggest_line = 0\n",
+    "words_count = 0\n",
+    "symb_count = 0\n",
+    "\n",
+    "with open('data.txt', 'r', encoding='utf-8') as f:\n",
+    "    for line in f:\n",
+    "       clean_line = line.split()\n",
+    "       words_count += len(clean_line)\n",
+    "       lines_count += 1\n",
+    "       line_length = len(line.strip())\n",
+    "       symb_count += line_length\n",
+    "    if line_length > biggest_line:\n",
+    "     biggest_line = line_length\n",
+    "\n",
+    "print(lines_count)\n",
+    "print(biggest_line)\n",
+    "print(words_count)\n",
+    "print(symb_count)\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5baf1f82",
+   "metadata": {},
+   "source": [
+    "Вторая задача"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "fc7c998e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "min_val = float(\"inf\")\n",
+    "max_val = float(\"-inf\")\n",
+    "total = 0\n",
+    "count = 0\n",
+    "\n",
+    "with open(\"numbers.txt\", \"r\", encoding='utf-8') as f:\n",
+    "    for line in f:\n",
+    "        line = line.strip()\n",
+    "        if not line:\n",
+    "            continue\n",
+    "        try:\n",
+    "            num = int(line)\n",
+    "            if num < min_val:\n",
+    "                min_val = num\n",
+    "            if num > max_val:\n",
+    "                max_val = num\n",
+    "            total += num\n",
+    "            count += 1\n",
+    "        except:\n",
+    "            print(\"Пропущена некоректная строка\")\n",
+    "if count > 0:\n",
+    "    avg_val = total / count\n",
+    "    with open('result.txt', 'w', encoding='utf-8') as res:\n",
+    "        res.write(f\"Минимальное значение: {min_val}\\n\")\n",
+    "        res.write(f\"Максимальное значение: {max_val}\\n\")\n",
+    "        res.write(f\"Среднее арифметическое: {avg_val:.2f}\\n\")\n",
+    "    print(f\"Готово! Обработано {count} чисел. Результаты в result.txt.\")\n",
+    "else:\n",
+    "    print(\"В файле не найдено ни одного корректного числа.\")\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "251853fd",
+   "metadata": {},
+   "source": [
+    "Третья задача"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6b2d7b07",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import csv\n",
+    "\n",
+    "with open('students.csv', 'r', encoding='utf-8') as f:\n",
+    "    reader = csv.DictReader(f)\n",
+    "    \n",
+    "    total_score = 0\n",
+    "    count = 0\n",
+    "    max_score = -1\n",
+    "    best_student = \"\"\n",
+    "    group_stats = {} \n",
+    "    \n",
+    "    for row in reader:\n",
+    "        score = int(row['score'])\n",
+    "        name = row['name']\n",
+    "        group = row['group']\n",
+    "        total_score += score\n",
+    "        count += 1\n",
+    "        \n",
+    "        if score > max_score:\n",
+    "            max_score = score\n",
+    "            best_student = name\n",
+    "        if group not in group_stats:\n",
+    "            group_stats[group] = [0, 0]\n",
+    "        group_stats[group][0] += score\n",
+    "        group_stats[group][1] += 1\n",
+    "\n",
+    "avg_score = total_score / count if count > 0 else 0\n",
+    "\n",
+    "print(f\"Средний балл всех студентов: {avg_score:.2f}\")\n",
+    "print(f\"Студент с максимальным баллом: {best_student} (балл: {max_score})\")\n",
+    "print(\"Средний балл по группам:\")\n",
+    "for grp, (sum_s, cnt) in group_stats.items():\n",
+    "    print(f\"  Группа {grp}: {sum_s / cnt:.2f}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "32147266",
+   "metadata": {},
+   "source": [
+    "Четвертое задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "395438fb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import csv\n",
+    "\n",
+    "headers = ['name', 'category', 'price']\n",
+    "with open('products.csv', 'r', encoding='utf-8') as f_in, \\\n",
+    "     open('expensive.csv', 'w', encoding='utf-8', newline='') as f_out:\n",
+    "    \n",
+    "    reader = csv.DictReader(f_in)\n",
+    "    writer = csv.DictWriter(f_out, fieldnames=headers)\n",
+    "    writer.writeheader()\n",
+    "    \n",
+    "    for row in reader:\n",
+    "        if int(row['price']) > 100:\n",
+    "            writer.writerow(row)\n",
+    "            \n",
+    "print(\"Фильтрация завершена\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "70202324",
+   "metadata": {},
+   "source": [
+    "Пятое задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3c08aff4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import json\n",
+    "\n",
+    "with open('students.json', 'r', encoding='utf-8') as f:\n",
+    "    students = json.load(f)\n",
+    "    \n",
+    "max_score = -1\n",
+    "best_student_name = \"\"\n",
+    "for student in students:\n",
+    "    student['passed'] = student['score'] >= 60\n",
+    "    if student['score'] > max_score:\n",
+    "        max_score = student['score']\n",
+    "        best_student_name = student['name']\n",
+    "print(f\"Студент с максимальным баллом: {best_student_name} ({max_score})\")\n",
+    "with open('students_updated.json', 'w', encoding='utf-8') as f:\n",
+    "    json.dump(students, f, indent=4, ensure_ascii=False)\n",
+    "    \n",
+    "print(\"Обновленные данные сохранены в students_updated.json\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4bcea5c4",
+   "metadata": {},
+   "source": [
+    "Шестое задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ea731d57",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from pathlib import Path\n",
+    "\n",
+    "dir_path = Path(input(\"Введите путь к каталогу: \"))\n",
+    "\n",
+    "if not dir_path.exists() or not dir_path.is_dir():\n",
+    "    print(\"Указанный путь не существует\")\n",
+    "else:\n",
+    "    files = []\n",
+    "    subdirs = []\n",
+    "    for item in dir_path.iterdir():\n",
+    "        if item.is_file():\n",
+    "            files.append(item)\n",
+    "        elif item.is_dir():\n",
+    "            subdirs.append(item)\n",
+    "    py_files = [f for f in files if f.suffix == '.py']\n",
+    "    total_size = sum(f.stat().st_size for f in files)\n",
+    "    \n",
+    "    print(f\"Количество файлов: {len(files)}\")\n",
+    "    print(f\"Количество подкаталогов: {len(subdirs)}\")\n",
+    "    print(f\"Список .py файлов: {[f.name for f in py_files]}\")\n",
+    "    print(f\"Суммарный размер всех файлов: {total_size} байт\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2a906893",
+   "metadata": {},
+   "source": [
+    "Седьмое задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "851c9715",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from pathlib import Path\n",
+    "\n",
+    "dir_path = Path(input(\"Каталог: \"))\n",
+    "extension = input(\"Расширение: \")\n",
+    "if not extension[0] == \".\":\n",
+    "    extension = '.' + extension\n",
+    "\n",
+    "try:\n",
+    "    if not dir_path.exists():\n",
+    "        raise FileNotFoundError(f\"Каталог '{dir_path}' не найден\")\n",
+    "    print(f\"Найденные файлы с расширением {extension}:\")\n",
+    "    found_count = 0\n",
+    "    for file in dir_path.rglob(f\"*{extension}\"):\n",
+    "        if file.is_file():\n",
+    "            print(f\"{file} - {file.stat().st_size} байт\")\n",
+    "            found_count += 1\n",
+    "    if found_count == 0:\n",
+    "        print(\"Файлы с таким расширением не найдены\")\n",
+    "        \n",
+    "except FileNotFoundError as e:\n",
+    "    print(f\"Ошибка: {e}\")\n",
+    "except PermissionError:\n",
+    "    print(\"Ошибка: нет прав доступа к каталогу\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c39d0050",
+   "metadata": {},
+   "source": [
+    "Восьмое задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b7a9d579",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def read_file(path):\n",
+    "    \"\"\"Возвращает содержимое файла или None в случае ошибки\"\"\"\n",
+    "    try:\n",
+    "        with open(path, 'r', encoding='utf-8') as f:\n",
+    "            return f.read()\n",
+    "    except FileNotFoundError:\n",
+    "        print(\"Ошибка: файл не найден - проверьте путь\")\n",
+    "    except PermissionError:\n",
+    "        print(\"Ошибка: недостаточно прав для чтения файла\")\n",
+    "    except IsADirectoryError:\n",
+    "        print(\"Ошибка: указанный путь является каталогом, а не файлом\")\n",
+    "    except OSError as e:\n",
+    "        print(f\"Произошла ошибка операционной системы: {e}\")\n",
+    "    except Exception as e:\n",
+    "        print(f\"Непредвиденная ошибка: {e}\")\n",
+    "        \n",
+    "    return None\n",
+    "\n",
+    "content = read_file(\"test.txt\")\n",
+    "if content is not None:\n",
+    "    print(\"Файл успешно прочитан.\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6ff0f50f",
+   "metadata": {},
+   "source": [
+    "Девятое занятие"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "953c4699",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def parse_number(value):\n",
+    "    return int(value)\n",
+    "\n",
+    "user_input = input(\"Введите значение для преобразования в число: \")\n",
+    "\n",
+    "try:\n",
+    "    result = parse_number(user_input)\n",
+    "    print(f\"Успех, Результат: {result}\")\n",
+    "except ValueError:\n",
+    "    print(f\"Ошибка: значение '{user_input}' не корректно\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9d818f62",
+   "metadata": {},
+   "source": [
+    "Десятое задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c72f20d5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class BankError(Exception):\n",
+    "    pass\n",
+    "\n",
+    "class InvalidAmountError(BankError):\n",
+    "    pass\n",
+    "\n",
+    "class InsufficientFundsError(BankError):\n",
+    "    pass\n",
+    "\n",
+    "class AccountBlockedError(BankError):\n",
+    "    pass\n",
+    "\n",
+    "def withdraw(balance, amount):\n",
+    "    if amount <= 0:\n",
+    "        raise InvalidAmountError(\"Сумма снятия должна быть положительной\")\n",
+    "    \n",
+    "    if balance < 0:\n",
+    "        raise AccountBlockedError(\"Счет заблокирован, операции невозможны\")\n",
+    "        \n",
+    "    if amount > balance:\n",
+    "        raise InsufficientFundsError(f\"Недостаточно средств - текущий баланс: {balance}\")\n",
+    "        \n",
+    "    return balance - amount\n",
+    "\n",
+    "current_balance = 1000\n",
+    "\n",
+    "test_amounts = [500, -100, 2000, 300]\n",
+    "\n",
+    "for amt in test_amounts:\n",
+    "    print(f\"\\nПопытка снятия{amt}...\")\n",
+    "    try:\n",
+    "        current_balance = withdraw(current_balance, amt)\n",
+    "        print(f\"Успешно! Новый баланс: {current_balance}\")\n",
+    "    except BankError as e:\n",
+    "        print(f\"Банковская ошибка: {e}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7336c1d0",
+   "metadata": {},
+   "source": [
+    "11 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "006cf110",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "path = int(input())\n",
+    "with open(path, 'r', encoding='utf-8') as f:\n",
+    "            a = f.read()\n",
+    "            \n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "166e06ce",
+   "metadata": {},
+   "source": [
+    "12 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6727e7bc",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b32bf4fc",
+   "metadata": {},
+   "source": [
+    "13 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3302fde6",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "16d78f77",
+   "metadata": {},
+   "source": [
+    "14 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "aa01e102",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c921db0d",
+   "metadata": {},
+   "source": [
+    "15 задние"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "db38ba0b",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "409a2247",
+   "metadata": {},
+   "source": [
+    "16 задние"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "baa36ae8",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "689e2771",
+   "metadata": {},
+   "source": [
+    "17 зпдпние"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e65010a0",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c03a757e",
+   "metadata": {},
+   "source": [
+    "18 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "710ecc5d",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d187a07f",
+   "metadata": {},
+   "source": [
+    "19 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b27b7a5b",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "af3e3537",
+   "metadata": {},
+   "source": [
+    "20 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "82a96a34",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "387ba652",
+   "metadata": {},
+   "source": [
+    "21 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4bb35799",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d6d0395b",
+   "metadata": {},
+   "source": [
+    "22 задние"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5125c64a",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "66fb7d9b",
+   "metadata": {},
+   "source": [
+    "23 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9319dd90",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ebe3b34e",
+   "metadata": {},
+   "source": [
+    "24 задание"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7b3c3f43",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1120be70",
+   "metadata": {},
+   "source": [
+    "25 задние"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4e9f4c44",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": ".venvml (3.12.0)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "name": "python",
+   "version": "3.12.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
