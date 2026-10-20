@@ -15,5 +15,5 @@ pip install -r hwXX-name/requirements.txt   # install deps for the HW you want
 | # | Folder | Topic | Status |
 |---|--------|-------|--------|
 | 01 | [hw01-intro](./hw01-intro) | Python basics | ✅ |
-| 02 | [hw02-loops](./hw02-loops) | Loops and functions | ✅ |
-| 03 | [hw03-files](./hw03-files) | File I/O | 🚧 |
+| 02 | [hw02-files](./hw02-files) | Files and functions | ✅ |
+| 03 | [hw03-?](./) | File I/O | 🚧 |
